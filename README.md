@@ -12,7 +12,6 @@ Authentication microservice for user registration, login, and secure password re
    python -m pip install flask flask-bcrypt requests
 
 3. **Start the server:**
-   *Open another terminal and execute the program*
    ```powershell
    python auth_service.py
   Server listens on http://localhost:5000
