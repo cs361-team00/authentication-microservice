@@ -10,18 +10,18 @@ Authentication microservice for user registration, login, and secure password re
    python -m venv venv
    .\venv\Scripts\activate   # On Windows PowerShell
    python -m pip install flask flask-bcrypt requests
-
+   ```
 3. **Start the server**
    ```powershell
    python auth_service.py
    # Server listens on http://localhost:5000
-
+   ```
 4. **Test API:**
    ```powershell
    # Open new terminal and run:
    python test_api.py
-
-## How to request and receive data
+   ```
+## How to request data
 To request data, the calling program must send an HTTP POST request to the desired endpoint with a JSON-formatted body.
 <br><br>
 **Example Call (Python):**
@@ -34,3 +34,20 @@ request_payload = {"user_email": "user@example.com", "user_pass": "SecurePass123
 
 # Sending the programmatic request
 response = requests.post("http://localhost:5000/api/register", json=request_payload)
+```
+## How to receive data
+To receive data, the microservice responds with a JSON object. The calling program must parse this JSON to receive the status and data values.
+<br><br>
+**Example Receive (Python):**
+```python
+# Receiving the response
+received_data = response.json()
+
+# Extracting data from the JSON response
+if received_data.get("status") == "success":
+    user_id = received_data.get("user_id")
+    print(f"Successfully registered! Received User ID: {user_id}")
+else:
+    error = received_data.get("error_message")
+    print(f"Registration failed: {error}")
+```
