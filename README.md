@@ -54,7 +54,7 @@ else:
 
 ## Communication Contract
 
-The following table defines the programmatic interface for this microservice. Teammates should use these keys to ensure successful data exchange.
+The following table defines the programmatic interface for this microservice.
 
 | Endpoint | Method | Purpose | Data to Send (Request) | Data to Receive (Response) |
 | :--- | :--- | :--- | :--- | :--- |
