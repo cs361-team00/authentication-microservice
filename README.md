@@ -51,5 +51,18 @@ else:
     error = received_data.get("error_message")
     print(f"Registration failed: {error}")
 ```
+
+## Communication Contract
+
+The following table defines the programmatic interface for this microservice. Teammates should use these keys to ensure successful data exchange.
+
+| Endpoint | Method | Purpose | Data to Send (Request) | Data to Receive (Response) |
+| :--- | :--- | :--- | :--- | :--- |
+| `/api/register` | POST | Creates a new user | `user_email`, `user_pass` | `status`, `user_id` |
+| `/api/login` | POST | Verifies credentials | `user_email`, `user_pass` | `status`, `session_token` |
+| `/api/request-reset` | POST | Starts reset flow | `user_email` | `status`, `reset_token` |
+| `/api/reset-password` | POST | Updates password | `reset_token`, `new_password` | `status`, `message` |
+
+---
 ## UML Diagram
 ![UML](UML.png)
