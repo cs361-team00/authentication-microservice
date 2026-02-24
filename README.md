@@ -8,7 +8,7 @@ Authentication microservice for user registration, login, and secure password re
    ```powershell
    python -m venv venv
    .\venv\Scripts\activate   # On Windows PowerShell
-   python -m pip install -r requirements.txt
+   python -m pip install flask flask-bcrypt requests
 
 2. **Start the server**
    ```powershell
