@@ -20,3 +20,17 @@ Authentication microservice for user registration, login, and secure password re
    ```powershell
    # Open new terminal and run:
    python test_api.py
+
+## How to request and receive data
+To request data, the calling program must send an HTTP POST request to the desired endpoint with a JSON-formatted body.
+<br><br>
+**Example Call (Python):**
+Request to register a new user with a username and a password
+```python
+import requests
+
+# The request payload
+request_payload = {"user_email": "user@example.com", "user_pass": "SecurePass123"}
+
+# Sending the programmatic request
+response = requests.post("http://localhost:5000/api/register", json=request_payload)
