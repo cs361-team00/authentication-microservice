@@ -51,3 +51,4 @@ else:
     error = received_data.get("error_message")
     print(f"Registration failed: {error}")
 ```
+## UML sequence diagram
