@@ -99,8 +99,8 @@ def request_reset():
 
 @app.route('/api/reset-password', methods=['POST'])
 def reset_password():
-    data = request.get_json(force=True, silent=True) or {} # Fixed typo getjson
-    token = data.get('reset_token') # Fixed typo tokin
+    data = request.get_json(force=True, silent=True) or {}
+    token = data.get('reset_token')
     new_password = data.get('new_password')
 
     email = reset_tokens.get(token)
@@ -124,4 +124,5 @@ def reset_password():
         return jsonify({"status": "error", "error_message": "Invalid or expired token."}), 400
 
 if __name__ == '__main__':
+
     app.run(port=5000, debug=True)
