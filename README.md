@@ -16,7 +16,7 @@ Authentication microservice for user registration, login, and secure password re
    python auth_service.py
    # Server listens on http://localhost:5000
    ```
-4. **Test API:**
+4. **Run Test API:**
    ```powershell
    # Open new terminal and run:
    python test_api.py
