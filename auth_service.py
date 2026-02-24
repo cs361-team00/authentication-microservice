@@ -28,7 +28,6 @@ init_db()
 def register():
     data = request.get_json(force=True, silent=True) or {}
     email = data.get('user_email')
-    # Fixed key to user_pass to match your test scripts
     password = data.get('user_pass') 
 
     # if no email or password was entered
@@ -112,7 +111,7 @@ def reset_password():
             cursor.execute("UPDATE users SET password_hash = ? WHERE email = ?", (hashed_password, email))
             conn.commit()
         
-        # Revoke token after use
+        # revoke token after use
         if token in reset_tokens:
             del reset_tokens[token] 
         
@@ -125,4 +124,5 @@ def reset_password():
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
+
 
