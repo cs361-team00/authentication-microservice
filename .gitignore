@@ -1,0 +1,15 @@
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Database files
+*.db
+*.sqlite3
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Environment secrets
+.env
