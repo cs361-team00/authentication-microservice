@@ -8,14 +8,16 @@ bcrypt = Bcrypt(app)
 
 DB_NAME = 'users.db'
 
+# temp dictionary for token storage
+reset_tokens = {}
+
+# initialize database
 def init_db():
     with sqlite3.connect(DB_NAME) as conn:
         conn.execute('''CREATE TABLE IF NOT EXISTS users (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         email TEXT UNIQUE NOT NULL,
-                        password_hash TEXT NOT NULL,
-                        session_token TEXT,
-                        reset_token TEXT
+                        password_hash TEXT NOT NULL
                     )''')
         conn.commit()
 init_db()
@@ -28,9 +30,11 @@ def register():
     email = data.get('user_email')
     password = data.get('user_pass') 
 
+    # if no email or password was entered
     if not email or not password:
         return jsonify({"status": "error", "error_message": "Email and password required.",}), 400
     
+    # hashes password and decodes it into text string so SQLite can read
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     try:
@@ -47,6 +51,7 @@ def register():
             "error_message": None
         }), 201
     
+    # error if email wasn't unique
     except sqlite3.IntegrityError:
         return jsonify({"status": "error", "error_message": "Email already registered."}), 400
 
@@ -58,15 +63,14 @@ def login():
     email = data.get('user_email')
     password = data.get('user_pass')
 
+    # searches database for matching email
     with sqlite3.connect(DB_NAME) as conn:
         cursor = conn.cursor()
         cursor.execute("SELECT id, password_hash FROM users WHERE email = ?", (email,))
         user = cursor.fetchone()
 
     if user and bcrypt.check_password_hash(user[1], password):
-        # Save the session token to the database
-        cursor.execute("UPDATE users SET session_token = ? WHERE id = ?", (session_token, user[0]))
-        conn.commit()
+        session_token = str(uuid.uuid4()) 
         return jsonify({"status": "success", "user_id": user[0], "session_token": session_token}), 200
     else:
         return jsonify({"status": "denied", "error_message": "Invalid email or password."}), 401
@@ -83,11 +87,10 @@ def request_reset():
         cursor.execute("SELECT id FROM users WHERE email = ?", (email,))
         user = cursor.fetchone()
 
+    # if user exists, generate token and attach it to dictionary
     if user:
         token = str(uuid.uuid4())
-        # Save token to database instead of the global dictionary
-        cursor.execute("UPDATE users SET reset_token = ? WHERE id = ?", (token, user[0]))
-        conn.commit()
+        reset_tokens[token] = email
         return jsonify({"status": "success", "reset_token": token}), 200
     else:
         return jsonify({"status": "error", "error_message": "Email not found."}), 404
@@ -108,7 +111,7 @@ def reset_password():
             cursor.execute("UPDATE users SET password_hash = ? WHERE email = ?", (hashed_password, email))
             conn.commit()
         
-        # Update password and revoke the reset token
+        # revoke token after use
         if token in reset_tokens:
             del reset_tokens[token] 
         
@@ -121,6 +124,4 @@ def reset_password():
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
-
-
 
